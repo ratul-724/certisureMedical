@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const fetchAllDataForDownload = (format) => {
-        fetch('http://localhost/amsMedical/backend/getAllDataForDownload.php', {
+        fetch('http://localhost/certisureMedical/backend/getAllDataForDownload.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(loggedInUser)

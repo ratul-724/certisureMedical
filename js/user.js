@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const state = {
         users: JSON.parse(localStorage.getItem('users')) || [],
         loggedInUser: JSON.parse(localStorage.getItem('loggedInUser')),
-        apiBaseUrl: 'http://localhost/amsMedical/backend/',
+        apiBaseUrl: 'http://localhost/certisureMedical/backend/',
         currentEditUser: null
     };
 

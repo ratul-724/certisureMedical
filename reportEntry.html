@@ -163,7 +163,7 @@
         
         async function loadAgents() {
             try {
-                const response = await fetch('http://localhost/amsMedical/backend/userList.php');
+                const response = await fetch('http://localhost/certisureMedical/backend/userList.php');
                 const users = await response.json();
                 const agentSelect = document.getElementById('agent');
                 // Clear existing options except the first one

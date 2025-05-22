@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!form) return; // Prevent errors if form is missing
 
     const fetchAllIds = () => {
-        return fetch('http://localhost/amsMedical/backend/getAllIds.php')
+        return fetch('http://localhost/certisureMedical/backend/getAllIds.php')
             .then(response => response.json())
             .then(data => {
                 return data;
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      fetch('http://localhost/amsMedical/backend/temporary_submit_data.php', {
+      fetch('http://localhost/certisureMedical/backend/temporary_submit_data.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(jsonData)

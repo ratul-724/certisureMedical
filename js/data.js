@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         loadingSpinner: document.getElementById('loadingSpinner')
     };
     
-   const API_BASE_URL = 'http://localhost/amsMedical/backend/';
+   const API_BASE_URL = 'http://localhost/certisureMedical/backend/';
 
     const fetchData = async (endpoint, body) => {
         try {

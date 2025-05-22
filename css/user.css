@@ -1,0 +1,109 @@
+
+/* User Page Styles */
+.password-container {
+    position: relative;
+    display: inline-block;
+}
+.password-container input {
+    padding-right: 30px;
+}
+.password-container i {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+#loginAndRegister {
+    justify-content: center;
+    font-size: 13px;
+}
+#loginAndRegister form {
+    background-color: #d5f3b8;
+    padding: 30px;
+    border-radius: 10px;
+}
+#loginAndRegister .signInBtn {
+    width: 100%;
+}
+#register {
+    display: none;
+}
+#userList {
+    display: none;
+    width: 80%;
+    margin: auto;
+}
+#userList td {
+    border-color: #444;
+}
+/*user edit modal*/
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    width: 50%;
+    max-width: 500px;
+    border-radius: 5px;
+}
+.close-modal {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.close-modal:hover {
+    color: black;
+}
+.form-group {
+    margin-bottom: 15px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+.form-group input, 
+.form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid black !important;
+    border-radius: 4px;
+}
+/* Dark mode styles */
+body.dark-mode .modal-content {
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+    border: 1px solid #444; 
+}
+body.dark-mode .form-group input, 
+body.dark-mode .form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #555 !important;
+    border-radius: 4px;
+    background-color: #3d3d3d;
+    color: #f0f0f0; 
+}
+@media (max-width: 768px) {
+    #loginAndRegister {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        font-size: 13px;
+        flex-direction: column;
+    }
+    #loginAndRegister form {
+        width: 100%;
+    }
+}

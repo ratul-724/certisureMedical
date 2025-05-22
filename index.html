@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <title>CertiSure Medical Agency | Home</title>
+</head>
+<body>
+    <header class="container-fluid d-flex justify-content-between align-items-center">
+        <div class="logo"><a href="index.html"><img src="media/logo.png" alt="logo"></a></div>
+        <h3 class="fw-semibold text-info-emphasis text-center ">Welcome  <span  id="welcomeName" class="fw-bold"> </span>!</h3>
+        <div class="header-icons">
+            <div ><a href="user.html"><img src="media/icons/user.png" alt="user" height="40px" class="userIcon"  id="userIcon" style="border-radius: 50%;"></a></div>
+            <!-- Dark Mode Toggle Button -->
+            <button id="darkModeToggle" class="btn  rounded-circle btn-dark">
+                <i class="fas fa-moon"></i> <!-- Moon icon for dark mode -->
+            </button>
+        </div>
+    </header>
+
+    <div class="fullBody">
+        <nav class="sidebar">
+            <ul>
+                <a href="index.html">
+                    <li class="menu-item">
+                        <i class="fa-solid fa-house" style="font-size: 24px;"></i> <span class="fw-semibold">Home</span>
+                    </li>
+                </a>
+                <a href="data.html">
+                    <li class="menu-item">
+                        <i class="fa-solid fa-database" style="font-size: 26px;"></i><span class="fw-semibold">Report</span>
+                    </li>
+                </a>
+                <a href="reportEntry.html" id="reportEntry" style="display: none;">
+                    <li class="menu-item">
+                        <i class="fa-solid fa-edit" style="font-size: 26px;"></i><span class="fw-semibold"> Report Entry</span>
+                    </li>
+                </a>
+                <a href="user.html">
+                    <li class="menu-item">
+                        <img src="media/icons/user.png" alt="user" height="27px"  id="userIconSidebar" style="border-radius: 50%;"><span class="fw-semibold">User</span>
+                    </li>
+                </a>
+            </ul>
+        </nav>
+
+        <main>
+            <div id="home">
+                <div class="topBanner position-relative w-100">
+                    <img src="media/banner.jpg" alt="" class="position-absolute">
+                </div>
+ 
+                <div class="welcome overflow-hidden mb-5">
+                    <div class="title text-center">
+                        <hr>
+                            <h3 class="fw-semibold text-info-emphasis">Our Medical Partner</h3>
+                        <hr>
+                    </div>
+
+                    <div class="row m-2 justify-content-center">
+                        <!-- Box 1 -->
+                         <div class="col-lg-3 col-md-5 m-3 p-4 rounded-4 text-center bg-white shadow-sm">
+                            <img src="media/Zara_Healthcare_Logo.png" width="150px" alt="" class="mb-3">
+                            <div class="medicalText">
+                                <h5 class="fw-bold">ZARA HEALTH CARE</h5>
+                                <p class="mb-3">Ground floor, Rangs GH Tower 335/B, Tejgaon I/A, Dhaka 1208</p>
+                                <h6 class="text-primary fw-bold">Ref. Code - BSL</h6>
+                            </div>
+                        </div>
+
+                        <!-- Box 2 -->
+                        <div class="col-lg-3 col-md-5 m-3 p-4 rounded-4 text-center bg-white shadow-sm">
+                            <img src="media/ishtiak.jpg" width="100px" alt="" class="mb-3">
+                            <div class="medicalText">
+                                <h5 class="fw-bold">Ishtiyaq Medical Center</h5>
+                                <p class="mb-3">571, (1st floor), ECP Chottor, Main Road, South Manikdi, Dhaka Cantonment, Dhaka-1206</p>
+                                <h6 class="text-primary fw-bold">Ref. Code - NM02</h6>
+                            </div>
+                        </div>
+
+                        <!-- Box 3 -->
+                        <div class="col-lg-3 col-md-5 m-3 p-4 rounded-4 text-center bg-white shadow-sm">
+                            <img src="media/ModernLogo.png" width="100px" alt="" class="mb-3">
+                            <div class="medicalText">
+                                <h5 class="fw-bold">MODERN MEDICAL CENTER</h5>
+                                <p class="mb-3">3, Nova Tower (Lift- 04), Culvert Road, Paltan, Dhaka- 1000</p>
+                                <h6 class="text-primary fw-bold">Ref. Code - </h6>
+                            </div>
+                        </div>
+
+                        <!-- Box 4 -->
+                        <div class="col-lg-3 col-md-5 m-3 p-4 rounded-4 text-center bg-white shadow-sm">
+                            <img src="media/saramedical.png" width="100px" alt="" class="mb-3">
+                            <div class="medicalText">
+                                <h5 class="fw-bold">SARA MEDICAL CENTER</h5>
+                                <p class="mb-3">World business centrum, 76/A, Road-11, Banani, Dhaka-1213</p>
+                                <h6 class="text-primary fw-bold">Ref. Code - 101</h6>
+                            </div>
+                        </div>
+
+                        <!-- Box 5 -->
+                        <div class="col-lg-3 col-md-5 m-3 p-4 rounded-4 text-center bg-white shadow-sm">
+                            <img src="media/echoLab.png" width="100px" alt="" class="mb-3">
+                            <div class="medicalText">
+                                <h5 class="fw-bold">EchoLab Medical Services</h5>
+                                <p class="mb-3">2, Rupayan FPAB Tower, Culvert Road, Paltan, Dhaka 1000</p>
+                                <h6 class="text-primary fw-bold">Ref. Code - </h6>
+                            </div>
+                        </div>
+
+                        <!-- Box 6 -->
+                        <div class="col-lg-3 col-md-5 m-3 p-4 rounded-4 text-center bg-white shadow-sm">
+                            <img src="media/rxMedical.png" width="100%" alt="" class="mb-3">
+                            <div class="medicalText">
+                                <h5 class="fw-bold">Rx Medical Centre</h5>
+                                <p class="mb-3">CWN(B)6, Road # 36, Gulshan-2, Dhaka – Bangladesh</p>
+                                <h6 class="text-primary fw-bold">Ref. Code- BSL MD 01</h6>
+                            </div>
+                        </div>
+
+                         <!-- Box 7 -->
+                        <div class="col-lg-3 col-md-5 m-3 p-4 rounded-4 text-center bg-white shadow-sm">
+                            <img src="media/sahara.png" width="100px" alt="" class="mb-3">
+                            <div class="medicalText">
+                                <h5 class="fw-bold mb-0">Sahara Medical Center</h5>
+                                <p class="mb-3 d-block">(For Kuwait)</p>
+                                <p class="mb-3">Jamalpur Twin Tower (1st Floor), GA - 37, 1 Progoti Sarani, Dhaka</p>
+                                <h6 class="text-primary fw-bold">Ref Code-A01</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer bg-dark text-light m-0">
+        <div class="container text-center py-4 pb-2">    
+            <div class="fs-3">
+                <a href="https://web.facebook.com/t.alihossen.official" target="_blank"><i class="fa-brands fa-square-facebook text-light"></i></a>
+                <a href="https://api.whatsapp.com/send?phone=8801773983064" target="_blank"><i class="fa-brands fa-square-whatsapp text-light"></i></a>
+                <a href="mailto:info@certisuremedical.com" target="_blank"><i class="fa-solid fa-square-envelope text-light"></i></a>
+                <a href="https://www.instagram.com/t.alihossen.official/" target="_blank"><i class="fa-brands fa-square-instagram text-light"></i></a>
+            </div>
+            <a href="#" class="link-info">Privacy Policy</a> | 
+            <a href="#" class="link-info">Terms of Service</a><br>
+            <span style="color: rgb(201, 201, 202); font-size: 12px;">© 2025 CertiSure Medical Agency. All rights reserved.</span>
+        </div>
+        <P class="ms-5 p-3 pb-1 mb-0 " style="font-size: 13px; color: rgb(147, 159, 169);">DEVELOPED BY <a href="https://web.facebook.com/ratul724" target="_blank" class="link-info">RaTuL HasAn</a></P>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/common.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

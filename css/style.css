@@ -1,0 +1,27 @@
+/* General Styles */
+main {
+    margin-left: 60px;
+    position: relative;
+    z-index: 1;
+    /* min-height: calc(100vh - 76px); */
+    width: 100%;
+}
+#home {
+    margin-bottom: 100px;
+}
+.topBanner {
+    height: 500px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+.topBanner img {
+    width: 100%;
+    height: 100%;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .topBanner {
+        height: 200px;
+    }
+}

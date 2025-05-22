@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/data.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <!-- Load jsPDF from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Load autoTable for tables in PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <!-- Load SheetJS for Excel generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <!-- Load your JavaScript file after all libraries -->
+    <script src="js/downloadReport.js"></script>
+    <title>CertiSure Medical Agency | All reports</title>
+</head>
+<body>
+    <header class="container-fluid d-flex justify-content-between align-items-center">
+        <div class="logo"><a href="index.html"><img src="media/logo.png" alt="logo" height="70px"></a></div>
+        <h3 class="fw-semibold text-info-emphasis text-center ">Welcome  <span  id="welcomeName" class="fw-bold"> </span>!</h3>
+        <div class="header-icons">
+            <div ><a href="user.html"><img src="media/icons/user.png" alt="user" height="40px" class="userIcon"  id="userIcon" style="border-radius: 50%;"></a></div>
+            <!-- Dark Mode Toggle Button -->
+            <button id="darkModeToggle" class="btn  rounded-circle btn-dark">
+                <i class="fas fa-moon"></i> <!-- Moon icon for dark mode -->
+            </button>
+        </div>
+    </header>
+    <div class="fullBody">
+        <nav class="sidebar">
+            <ul>
+                <a href="index.html">
+                    <li class="menu-item">
+                        <i class="fa-solid fa-house" style="font-size: 24px;"></i> <span class="fw-semibold">Home</span>
+                    </li>
+                </a>
+                <a href="data.html">
+                    <li class="menu-item">
+                        <i class="fa-solid fa-database" style="font-size: 26px;"></i><span class="fw-semibold">Report</span>
+                    </li>
+                </a>
+                <a href="reportEntry.html" id="reportEntry" style="display: none;">
+                    <li class="menu-item">
+                        <i class="fa-solid fa-edit" style="font-size: 26px;"></i><span class="fw-semibold"> Report Entry</span>
+                    </li>
+                </a>
+                <a href="user.html">
+                    <li class="menu-item">
+                        <img src="media/icons/user.png" alt="user" height="27px"  id="userIconSidebar" style="border-radius: 50%;"><span class="fw-semibold">User</span>
+                    </li>
+                </a>
+            </ul>
+        </nav>
+        <main>   
+            <div id="data" class="ms-5 me-2 ps-4">
+                <div class="dataPageTop  m-0 w-100">
+                    <div class="insideDataPageTop justify-content-between align-items-center px-3 w-100" style="display: flex !important;">
+                        <h2 class="text-info-emphasis fw-semibold mt-3 " id="dataPageTopTitle">Submitted Reports :</h2>
+                        <div class=" justify-content-end mt-3" id="dataPageTopBtns">
+                            <button id="allReports" class="btn rounded-pill btn-primary mx-lg-2">All Reports</button>
+
+                            <button id="submittedReports" class="btn rounded-pill btn-primary mx-lg-2" style="display: none;">Submitted Reports</button>
+
+                            <button id="uploadData" class="btn rounded-pill btn-success mx-lg-2"><i class="fa-solid fa-cloud-arrow-up"></i> Upload Report</button>
+
+                            <div id="downloadContainer"  style="display: none;">
+                                <button id="downloadIcon" class="btn  rounded-circle btn-light me-2" title="Download Reports"><i class="fa-solid fa-download"></i></button>
+                                <!-- Dropdown menu for download options -->
+                                <div id="downloadOptions" class="dropdown-menu" style="display: none;">
+                                    <button id="downloadPDF" class="dropdown-item"><i class="fa-solid fa-file-pdf"></i> As PDF</button>
+                                    <button id="downloadExcel" class="dropdown-item"><i class="fa-solid fa-file-excel"></i> As Excel</button>
+                                </div>
+                            </div>
+                            <button id="clearPage" class="btn rounded-circle btn-danger mx-lg-2" title="Clear Page"><i class="fa-solid fa-trash"></i> </button>
+                        </div>
+                    </div>
+                    <hr style="border: 2px solid rgb(131, 128, 128); width: 100%;">
+                </div>
+                
+                <div id="dataDisplay" class="dataView"></div>
+                <div id="allDataDisplay" class="dataView"></div>
+            </div>
+        </main>
+        <div id="loadingSpinner" style="display: none;"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer bg-dark text-light m-0">
+        <div class="container text-center py-4 pb-2">    
+            <div class="fs-3">
+                <a href="https://web.facebook.com/t.alihossen.official" target="_blank"><i class="fa-brands fa-square-facebook text-light"></i></a>
+                <a href="https://api.whatsapp.com/send?phone=8801773983064" target="_blank"><i class="fa-brands fa-square-whatsapp text-light"></i></a>
+                <a href="mailto:info@certisuremedical.com" target="_blank"><i class="fa-solid fa-square-envelope text-light"></i></a>
+                <a href="https://www.instagram.com/t.alihossen.official/" target="_blank"><i class="fa-brands fa-square-instagram text-light"></i></a>
+            </div>
+            <a href="#" class="link-info">Privacy Policy</a> | 
+            <a href="#" class="link-info">Terms of Service</a><br>
+            <span style="color: rgb(201, 201, 202); font-size: 12px;">© 2025 CertiSure Medical Agency. All rights reserved.</span>
+        </div>
+        <P class="ms-5 p-3 pb-1 mb-0 " style="font-size: 13px; color: rgb(147, 159, 169);">DEVELOPED BY <a href="https://web.facebook.com/ratul724" target="_blank" class="link-info">RaTuL HasAn</a></P>
+    </footer>
+
+    <script src="js/data.js"></script>
+    <!-- <script src="js/updateReport.js"></script> -->
+    <script src="js/common.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

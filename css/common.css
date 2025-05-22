@@ -1,0 +1,189 @@
+/* General Styles */
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 61px;
+    background-color: #f1f1f1;
+    color: white;
+    z-index: 1000;
+    height: 80px;
+    box-sizing: border-box;
+}
+.header-icons {
+    display: flex;
+    gap: 20px;
+}
+header .logo img{
+    height: 70px;
+}
+@media (max-width: 768px) {
+    header .logo img{
+        height: 40px;
+    }
+}
+.fullBody {
+    display: flex;
+    position: relative;
+    margin-top: 76px;
+}
+.sidebar {
+    position: fixed;
+    top: 76px;
+    left: 0;
+    height: 100%;
+    width: 60px;
+    background-color: #f1f1f1;
+    transition: width 0.3s;
+    overflow: hidden;
+    z-index: 999;
+}
+.sidebar:hover {
+    width: 170px;
+}
+.sidebar ul a {
+    text-decoration: none;
+    color: rgb(18, 17, 17);
+}
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 30px;
+}
+.menu-item {
+    padding: 15px;
+    margin: 15px 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.menu-item:hover {
+    background-color: #c9dec5;
+}
+.menu-item span {
+    margin-left: 10px;
+    opacity: 0;
+    white-space: nowrap;
+    transition: opacity 0.3s;
+}
+.sidebar:hover .menu-item span {
+    opacity: 1;
+}
+main {
+    background: linear-gradient(to bottom right, #f1f1f1, #86ca86);
+}
+.focusNone:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+select {
+    width: 100%; 
+    padding: 0.5rem; 
+    font-size: 1rem;
+    border: 1px solid #ccc; 
+    border-radius: 4px; 
+    background-color: #fff; 
+    color: #333; 
+    cursor: pointer;
+    border-color: #000000 !important;
+}
+/* Dark Mode Styles */
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+body.dark-mode main {
+    background: linear-gradient(to bottom right, #0c0d0e, #3b444d);
+    color: white;
+}
+body.dark-mode .topBanner img {
+    filter: brightness(0.9); /* Adjust banner brightness for dark mode */
+}
+body.dark-mode .card {
+    background-color: #100f12 !important;
+    color: #ffffff;
+    border-color: #444;
+}
+body.dark-mode .form-label {
+    color: #ffffff; 
+}
+body.dark-mode select {
+    background-color: #333; 
+    color: #ffffff; 
+    border-color: #444; 
+}
+body.dark-mode .medicalText {
+    color: #ffffff;
+}
+body.dark-mode .bg-white {
+    background-color: #100f12 !important;
+    color: #ffffff;
+}
+body.dark-mode .form-control {
+    background-color: #3f3d3d;
+    color: #ffffff;
+    border-color: #444;
+}
+body.dark-mode .header-icons .btn-dark {
+    background-color: #100f12 !important;
+    border-color: #444;
+}
+body.dark-mode .sidebar {
+    background-color: #100f12 !important;
+    color: #ffffff;
+}
+body.dark-mode header {
+    background-color: #100f12 !important;
+    color: #ffffff !important;
+}
+body.dark-mode h3 {
+    color: #ffffff !important;
+}
+body.dark-mode .menu-item {
+    color: #ffffff;
+}
+body.dark-mode .menu-item:hover {
+    background-color: #333;
+}
+
+/* login register area  */
+body.dark-mode #loginAndRegister form {
+    background-color: #100f12 !important;
+    color: #ffffff;
+}
+body.dark-mode form input::placeholder {
+    color: #c6c5c5;
+}
+body.dark-mode .password-container input {
+    background-color: #333;
+    color: #ffffff;
+    border-color: #444;
+}
+body.dark-mode .password-container i {
+    color: #ffffff;
+}
+body.dark-mode .userTitleText{
+    color: #ffffff !important;
+}
+body.dark-mode #userList {
+    background: #333 !important;
+}
+body.dark-mode #userList th,
+body.dark-mode #userList td {
+    border-color: #444;
+}

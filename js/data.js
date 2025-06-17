@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         loadingSpinner: document.getElementById('loadingSpinner')
     };
     
-   const API_BASE_URL = 'http://localhost/certisureMedical/backend/';
+    const API_BASE_URL = 'http://localhost/certisureMedical/backend/';
 
     const fetchData = async (endpoint, body) => {
         try {
@@ -49,7 +49,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
-
     const renderTable = (data, isUploaded = false) => {
         const displayElement = isUploaded ? elements.allDataDisplay : elements.dataDisplay;
         displayElement.innerHTML = ''; // Clear previous content
@@ -70,7 +69,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     const createTableHeader = (isAdmin) => {
-        const headers = ['medical_name', 'date', 'id', 'name', 'passport', 'agent', 'status', 'remarks'];
+        const headers = ['SL', 'medical_name', 'date', 'id', 'name', 'passport', 'agent', 'status', 'remarks'];
         const headerRow = document.createElement('tr');
         headers.forEach(header => headerRow.appendChild(createHeaderCell(header)));
         if (isAdmin) headerRow.appendChild(createHeaderCell('Actions'));
@@ -87,7 +86,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const createTableBody = (data, isAdmin) => {
         const tbody = document.createElement('tbody');
-        data.sort((a, b) => new Date(a.date) - new Date(b.date)).forEach(row => tbody.appendChild(createTableRow(row, isAdmin)));
+        data.sort((a, b) => new Date(a.date) - new Date(b.date))
+           .forEach((row, index) => tbody.appendChild(createTableRow(row, isAdmin, index)));
         return tbody;
     };
 
@@ -104,9 +104,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         return td;
     };
 
-    const createTableRow = (rowData, isAdmin) => {
+    const createTableRow = (rowData, isAdmin, index) => {
         const row = document.createElement('tr');
         row.setAttribute('data-id', rowData.id);
+        
+        // Add serial number cell
+        const serialCell = document.createElement('td');
+        serialCell.textContent = index + 1;
+        row.appendChild(serialCell);
+        
         const isUnfit = ['laboratory', 'remarks'].some(
             key => rowData[key]?.toUpperCase() === 'UNFIT'
         );
@@ -114,10 +120,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             row.style.backgroundColor = 'red';
             row.style.color = 'white';
         }
+        
+        // Add other cells
         Object.keys(rowData).forEach(key => {
             const cell = createTableCell(rowData[key], key);
             row.appendChild(cell);
         });
+        
         if (isAdmin) {
             const actionCell = createActionCell(rowData);
             row.appendChild(actionCell);
@@ -175,42 +184,38 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (confirm('Are you sure you want to upload this report?')) {
             const response = await fetchData('upload_single_data.php', { rowId: rowData.id });
             if (response?.status === 'success') {
-                // alert(response.message);
                 fetchDataAndRender(); // Reload the data
             } else {
                 alert(response?.message || 'Upload failed.');
             }
         }
     };  
-    
+
     const handleBulkUpload = async () => {
-    if (confirm('Are you sure you want to upload all unique data?')) {
-        try {
-            elements.loadingSpinner.style.display = 'block';
-            const response = await fetchData('upload_all_data.php', {});
-            if (response?.status === 'success') {
-                alert(response.message, 'success');
-                fetchDataAndRender();
-            } else {
-                alert(response?.message || 'Upload failed', 'error');
+        if (confirm('Are you sure you want to upload all unique data?')) {
+            try {
+                elements.loadingSpinner.style.display = 'block';
+                const response = await fetchData('upload_all_data.php', {});
+                if (response?.status === 'success') {
+                    alert(response.message, 'success');
+                    fetchDataAndRender();
+                } else {
+                    alert(response?.message || 'Upload failed', 'error');
+                }
+            } catch (error) {
+                alert(error.message, 'error');
+            } finally {
+                elements.loadingSpinner.style.display = 'none';
             }
-        } catch (error) {
-            alert(error.message, 'error');
-        } finally {
-            elements.loadingSpinner.style.display = 'none';
         }
-    }
-};
+    };
 
-
-    // Attach event listeners
     elements.uploadDataButton.addEventListener('click', handleBulkUpload);
     
-    // Attach event listeners to row-wise upload buttons
     document.querySelectorAll('.uploadRowButton').forEach(button => {
         button.addEventListener('click', () => {
             const rowId = button.getAttribute('data-id');
-            const rowData = { id: rowId }; // Replace this with actual row data
+            const rowData = { id: rowId };
             handleUpload(rowData);
         });
     });
@@ -219,15 +224,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         const row = event.target.closest('tr');
         const cells = row.querySelectorAll('td');
         const originalData = { ...rowData };
-        cells.forEach((cell, index) => {
-            if (index < cells.length - 1) {
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.value = cell.textContent;
-                cell.textContent = '';
-                cell.appendChild(input);
-            }
-        });
+        
+        // Skip the first cell (serial number) when editing
+        for (let i = 1; i < cells.length - 1; i++) {
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = cells[i].textContent;
+            cells[i].textContent = '';
+            cells[i].appendChild(input);
+        }
+        
         const saveButton = document.createElement('button');
         saveButton.innerHTML = '<i class="fa-solid fa-floppy-disk" title="Save"></i>';
         saveButton.classList.add('btn', 'btn-success', 'btn-sm', 'me-1');
@@ -252,15 +258,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         const cells = row.querySelectorAll('td');
         const updatedData = { ...originalData, id: rowId };
-        cells.forEach((cell, index) => {
-            if (index < cells.length - 1) {
-                const key = Object.keys(originalData)[index];
-                const input = cell.querySelector('input');
-                if (input) {
-                    updatedData[key] = input.value.trim();
-                }
+        
+        // Start from index 1 to skip serial number
+        for (let i = 1; i < cells.length - 1; i++) {
+            const key = Object.keys(originalData)[i - 1]; // Adjust index for originalData
+            const input = cells[i].querySelector('input');
+            if (input) {
+                updatedData[key] = input.value.trim();
             }
-        });
+        }
+        
         const isAllReportsView = elements.allDataDisplay.style.display === 'block';
         const endpoint = isAllReportsView ? 'updateMedicalData.php' : 'updateData.php';
         const response = await fetchData(endpoint, updatedData);
@@ -277,11 +284,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const handleCancel = (row, originalData) => {
         const cells = row.querySelectorAll('td');
-        cells.forEach((cell, index) => {
-            if (index < cells.length - 1) {
-                cell.textContent = originalData[Object.keys(originalData)[index]];
-            }
-        });
+        // Skip first cell (serial number) when restoring values
+        for (let i = 1; i < cells.length - 1; i++) {
+            const key = Object.keys(originalData)[i - 1];
+            cells[i].textContent = originalData[key];
+        }
+        
         const actionCell = cells[cells.length - 1];
         actionCell.innerHTML = '';
         actionCell.appendChild(createUploadButton(originalData));

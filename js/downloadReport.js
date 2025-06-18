@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
     
-            // 📌 Reduce side margins (left & right)
+            // Reduce side margins (left & right)
             doc.autoTable({
                 startY: 15, 
                 head: [['Medical Name', 'Date', 'ID', 'Name', 'Passport', 'Agent', 'Status', 'Remarks']],
@@ -91,11 +91,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 styles: { 
                     fontSize: 10,    // Smaller font size
                     cellPadding: 1, // Reduce cell padding
-                    lineWidth: 0.1, // 🔥 Border thickness
-                    lineColor: [0, 0, 0], // 🔥 Black border
+                    lineWidth: 0.1, // Border thickness
+                    lineColor: [0, 0, 0], // Black border
                 },
                 headStyles: { fillColor: [100, 100, 255], textColor: 255 }, 
-                margin: { left: 5, right: 5 },  // 🔥 Reduce left & right gaps
+                margin: { left: 5, right: 5 },  // Reduce left & right gaps
                 tableWidth: 'auto' // Fit table within page width
             });
     

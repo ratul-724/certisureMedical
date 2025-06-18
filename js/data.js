@@ -16,8 +16,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const elements = {
         dataDisplay: document.getElementById('dataDisplay'),
-        allDataDisplay: document.getElementById('allDataDisplay'),
-        allReportsButton: document.getElementById('allReports'),
         submittedReportsButton: document.getElementById('submittedReports'),
         uploadDataButton: document.getElementById('uploadData'),
         clearPageButton: document.getElementById('clearPage'),
@@ -49,14 +47,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
-    const renderTable = (data, isUploaded = false) => {
-        const displayElement = isUploaded ? elements.allDataDisplay : elements.dataDisplay;
-        displayElement.innerHTML = ''; // Clear previous content
+    const renderTable = (data) => {
+        elements.dataDisplay.innerHTML = ''; // Clear previous content
         if (data.length > 0) {
             const table = createTable(data, loggedInUser.role === 'admin');
-            displayElement.appendChild(table);
+            elements.dataDisplay.appendChild(table);
         } else {
-            displayElement.innerHTML = '<p>No data available.</p>';
+            elements.dataDisplay.innerHTML = '<p>No data available.</p>';
         }
     };
 
@@ -136,32 +133,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const createActionCell = (rowData) => {
         const actionTd = document.createElement('td');
-        actionTd.appendChild(createUploadButton(rowData));
         actionTd.appendChild(createEditButton(rowData));
         actionTd.appendChild(createDeleteButton(rowData));
         return actionTd;
-    };
-
-    const createUploadButton = (rowData) => {
-        const button = document.createElement('button');
-        button.classList.add('btn', 'btn-sm', 'me-1');
-        if (elements.allDataDisplay.style.display === 'block') {
-            return document.createElement('span');
-        }
-        fetchData('check_data.php', rowData)
-            .then(response => {
-                if (response?.exists) {
-                    button.innerHTML = '<i class="fa-solid fa-check" title="Already Uploaded"></i>';
-                    button.classList.add('btn-success');
-                    button.disabled = true;
-                } else {
-                    button.innerHTML = '<i class="fa-solid fa-upload" title="Upload this row"></i>';
-                    button.classList.add('btn-primary');
-                    button.addEventListener('click', () => handleUpload(rowData));
-                }
-            })
-            .catch(error => console.error('Error checking data:', error));
-        return button;
     };
 
     const createEditButton = (rowData) => {
@@ -180,46 +154,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         return button;
     };
 
-    const handleUpload = async (rowData) => {
-        if (confirm('Are you sure you want to upload this report?')) {
-            const response = await fetchData('upload_single_data.php', { rowId: rowData.id });
-            if (response?.status === 'success') {
-                fetchDataAndRender(); // Reload the data
-            } else {
-                alert(response?.message || 'Upload failed.');
-            }
-        }
-    };  
-
-    const handleBulkUpload = async () => {
-        if (confirm('Are you sure you want to upload all unique data?')) {
-            try {
-                elements.loadingSpinner.style.display = 'block';
-                const response = await fetchData('upload_all_data.php', {});
-                if (response?.status === 'success') {
-                    alert(response.message, 'success');
-                    fetchDataAndRender();
-                } else {
-                    alert(response?.message || 'Upload failed', 'error');
-                }
-            } catch (error) {
-                alert(error.message, 'error');
-            } finally {
-                elements.loadingSpinner.style.display = 'none';
-            }
-        }
-    };
-
-    elements.uploadDataButton.addEventListener('click', handleBulkUpload);
-    
-    document.querySelectorAll('.uploadRowButton').forEach(button => {
-        button.addEventListener('click', () => {
-            const rowId = button.getAttribute('data-id');
-            const rowData = { id: rowId };
-            handleUpload(rowData);
-        });
-    });
-    
     const handleEdit = (rowData) => {
         const row = event.target.closest('tr');
         const cells = row.querySelectorAll('td');
@@ -229,18 +163,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         for (let i = 1; i < cells.length - 1; i++) {
             const input = document.createElement('input');
             input.type = 'text';
+            input.classList.add('form-control', 'form-control-sm', 'border', 'border-secondary');
             input.value = cells[i].textContent;
             cells[i].textContent = '';
             cells[i].appendChild(input);
         }
         
         const saveButton = document.createElement('button');
-        saveButton.innerHTML = '<i class="fa-solid fa-floppy-disk" title="Save"></i>';
+        saveButton.innerHTML = '<i class="fa-solid fa-floppy-disk" ></i>';
+        saveButton.title = 'Save';
         saveButton.classList.add('btn', 'btn-success', 'btn-sm', 'me-1');
         saveButton.addEventListener('click', () => handleSave(row, originalData));
 
         const cancelButton = document.createElement('button');
         cancelButton.innerHTML = '<i class="fa-solid fa-xmark" title="Cancel"></i>';
+        cancelButton.title = 'cancel';
         cancelButton.classList.add('btn', 'btn-danger', 'btn-sm');
         cancelButton.addEventListener('click', () => handleCancel(row, originalData));
 
@@ -268,15 +205,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
         
-        const isAllReportsView = elements.allDataDisplay.style.display === 'block';
-        const endpoint = isAllReportsView ? 'updateMedicalData.php' : 'updateData.php';
-        const response = await fetchData(endpoint, updatedData);
+        const response = await fetchData('updateData.php', updatedData);
         if (response?.status === 'success') {
-            if (isAllReportsView) {
-                fetchUploadedDataAndRender();
-            } else {
-                fetchDataAndRender();
-            }
+            fetchDataAndRender();
         } else {
             alert(response?.message || '❌ Update failed.');
         }
@@ -292,22 +223,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         const actionCell = cells[cells.length - 1];
         actionCell.innerHTML = '';
-        actionCell.appendChild(createUploadButton(originalData));
         actionCell.appendChild(createEditButton(originalData));
         actionCell.appendChild(createDeleteButton(originalData));
     };
 
     const handleDelete = async (id) => {
         if (confirm('Are you sure you want to delete this report?')) {
-            const isAllReportsView = elements.allDataDisplay.style.display === 'block';
-            const section = isAllReportsView ? 'all_reports' : 'submitted';
-            const response = await fetchData('deleteData.php', { id, section });
+            const response = await fetchData('deleteData.php', { id, section: 'submitted' });
             if (response?.status === 'success') {
-                if (isAllReportsView) {
-                    fetchUploadedDataAndRender();
-                } else {
-                    fetchDataAndRender();
-                }
+                fetchDataAndRender();
             } else {
                 alert(response?.message || 'Deletion failed.');
             }
@@ -318,33 +242,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const data = await fetchData('getSubmittedData.php', loggedInUser);
         if (data) renderTable(data);
     };
-
-    const fetchUploadedDataAndRender = async () => {
-        const data = await fetchData('getUploadedData.php', loggedInUser);
-        if (data) renderTable(data, true);
-    };
-
-    const toggleViews = (showAllReports) => {
-        elements.allReportsButton.style.display = showAllReports ? 'none' : 'block';
-        elements.submittedReportsButton.style.display = showAllReports ? 'block' : 'none';
-        elements.uploadDataButton.style.display = showAllReports ? 'none' : 'block';
-        elements.clearPageButton.style.display = showAllReports ? 'none' : 'block';
-        elements.dataDisplay.style.display = showAllReports ? 'none' : 'block';
-        elements.allDataDisplay.style.display = showAllReports ? 'block' : 'none';
-        document.getElementById('dataPageTopTitle').innerHTML = showAllReports ? 'All Reports :' : 'Submitted Reports :';
-        const downloadContainer = document.getElementById('downloadContainer');
-        downloadContainer.style.display = showAllReports ? 'block' : 'none'; 
-    };
-
-    elements.allReportsButton.addEventListener('click', () => {
-        fetchUploadedDataAndRender();
-        toggleViews(true);
-    });
-
-    elements.submittedReportsButton.addEventListener('click', () => {
-        fetchDataAndRender();
-        toggleViews(false);
-    });
 
     elements.clearPageButton.addEventListener('click', async () => {
         if (confirm('Are you sure you want to remove all reports?')) {
@@ -358,10 +255,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    if (loggedInUser.role === 'admin') {
-        fetchDataAndRender();
-    } else {
-        fetchUploadedDataAndRender();
-        toggleViews(true);
-    }
+    // Initialize the page
+    fetchDataAndRender();
 });

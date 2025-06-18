@@ -3,7 +3,7 @@
 include 'db_config.php';
 
 // Query to fetch data from the medical_data table
-$query = "SELECT * FROM medical_data"; // Ensure this matches your table name
+$query = "SELECT * FROM temporary_medical_data"; // Ensure this matches your table name
 $result = $conn->query($query);
 
 if ($result === false) {

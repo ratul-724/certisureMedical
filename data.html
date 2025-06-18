@@ -60,28 +60,26 @@
                     <div class="insideDataPageTop justify-content-between align-items-center px-3 w-100" style="display: flex !important;">
                         <h2 class="text-info-emphasis fw-semibold mt-3 " id="dataPageTopTitle">Submitted Reports :</h2>
                         <div class=" justify-content-end mt-3" id="dataPageTopBtns">
-                            <button id="allReports" class="btn rounded-pill btn-primary mx-lg-2">All Reports</button>
+                            <button id="searchButton" class="btn rounded-pill btn-light mx-2" title="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
 
-                            <button id="submittedReports" class="btn rounded-pill btn-primary mx-lg-2" style="display: none;">Submitted Reports</button>
-
-                            <button id="uploadData" class="btn rounded-pill btn-success mx-lg-2"><i class="fa-solid fa-cloud-arrow-up"></i> Upload Report</button>
-
-                            <div id="downloadContainer"  style="display: none;">
-                                <button id="downloadIcon" class="btn  rounded-circle btn-light me-2" title="Download Reports"><i class="fa-solid fa-download"></i></button>
+                            <div id="downloadContainer" >
+                                <button id="downloadIcon" class="btn rounded-pill btn-success me-2" title="Download Reports"><i class="fa-solid fa-download"></i></button>
                                 <!-- Dropdown menu for download options -->
-                                <div id="downloadOptions" class="dropdown-menu" style="display: none;">
+                                <div id="downloadOptions" class="dropdown-menu">
                                     <button id="downloadPDF" class="dropdown-item"><i class="fa-solid fa-file-pdf"></i> As PDF</button>
                                     <button id="downloadExcel" class="dropdown-item"><i class="fa-solid fa-file-excel"></i> As Excel</button>
                                 </div>
                             </div>
-                            <button id="clearPage" class="btn rounded-circle btn-danger mx-lg-2" title="Clear Page"><i class="fa-solid fa-trash"></i> </button>
+
+                            <button id="clearPage" class="btn rounded-pill btn-danger" title="Clear Page"><i class="fa-solid fa-trash"></i> </button>
                         </div>
                     </div>
                     <hr style="border: 2px solid rgb(131, 128, 128); width: 100%;">
                 </div>
                 
-                <div id="dataDisplay" class="dataView"></div>
-                <div id="allDataDisplay" class="dataView"></div>
+                <div id="dataDisplay" class="dataView">
+                    <!-- here add all data  -->
+                </div>
             </div>
         </main>
         <div id="loadingSpinner" style="display: none;"></div>

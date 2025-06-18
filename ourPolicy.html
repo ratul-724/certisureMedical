@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Policy | CertiSure Medical Agency</title>
+    <!-- Siyam Rupali CDN -->
+    <link href="https://cdn.rawgit.com/sarwaralam/Lohit-Bengali/f6f0f3a5/font.css" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        :root {
+            --primary-color: #2c7be5;
+        }
+        body {
+            font-family: 'Siyam Rupali', 'Lohit Bengali', Arial, sans-serif;
+            background: linear-gradient(to bottom right, #f1f1f1, #86ca86);
+            line-height: 1.5;
+        }
+        .bangla {
+            font-family: 'Siyam Rupali', 'Lohit Bengali', Arial, sans-serif;
+            font-weight: normal;
+        }
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #6e8efc 100%);
+        }
+        .instruction-card {
+            border-left: 4px solid var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+        .important-note {
+            border-left: 4px solid #e83e8c;
+            background-color: #fff5f7;
+        }
+        .contact-card {
+            background-color: #f8fafc;
+            border: 1px dashed var(--primary-color);
+        }
+        .step-badge {
+            width: 32px;
+            height: 32px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <header class="container-fluid d-flex justify-content-between align-items-center">
+        <div class="logo"><a href="index.html"><img src="media/logo.png" alt="logo"></a></div>
+        <h3 class="fw-semibold text-info-emphasis text-center ">Welcome  <span  id="welcomeName" class="fw-bold"> </span>!</h3>
+        <div class="header-icons">
+            <div ><a href="user.html"><img src="media/icons/user.png" alt="user" height="40px" class="userIcon"  id="userIcon" style="border-radius: 50%;"></a></div>
+            <!-- Dark Mode Toggle Button -->
+            <button id="darkModeToggle" class="btn  rounded-circle btn-dark">
+                <i class="fas fa-moon"></i> <!-- Moon icon for dark mode -->
+            </button>
+        </div>
+    </header>
+
+    <!-- Top Section -->
+    <div class="mt-4 pt-2">
+        <div class="header text-white py-5 my-5">
+            <div class="container text-center">
+                <h1 class="display-5 fw-bold mb-3 bangla"> মেডিকেল প্রসেসিং–সংক্রান্ত নির্দেশনা</h1>
+                <p class="lead mb-0 bangla">Powered by : CertiSure Medical Agency</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="fullBody">
+        <nav class="sidebar">
+            <ul>
+                <a href="index.html">
+                    <li class="menu-item">
+                        <i class="fa-solid fa-house" style="font-size: 24px;"></i> <span class="fw-semibold">Home</span>
+                    </li>
+                </a>
+                <a href="data.html">
+                    <li class="menu-item">
+                        <i class="fa-solid fa-database" style="font-size: 26px;"></i><span class="fw-semibold">Report</span>
+                    </li>
+                </a>
+                <a href="reportEntry.html" id="reportEntry" style="display: none;">
+                    <li class="menu-item">
+                        <i class="fa-solid fa-edit" style="font-size: 26px;"></i><span class="fw-semibold"> Report Entry</span>
+                    </li>
+                </a>
+                <a href="user.html">
+                    <li class="menu-item">
+                        <img src="media/icons/user.png" alt="user" height="27px"  id="userIconSidebar" style="border-radius: 50%;"><span class="fw-semibold">User</span>
+                    </li>
+                </a>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="container mb-5">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 col-lg-8">
+                    <!-- Instruction 1 -->
+                    <div class="card instruction-card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <span class="step-badge bg-primary text-white rounded-circle d-flex align-items-center justify-content-center">১</span>
+                                <h5 class="card-title mb-0 bangla">মেডিকেল ফি</h5>
+                            </div>
+                            <div class="bangla-text ps-4 ps-md-5">
+                                <p class="card-text mb-2">
+                                    প্রথমে ৮,৫০০ টাকা প্রদান করে আমাদের রেফারেন্স কোড ব্যবহার করে মেডিকেল করবেন বা করাবেন।
+                                </p>
+                                <p class="card-text mb-0">
+                                    <i class="fas fa-arrow-right me-1 text-primary"></i>
+                                    মেডিকেল সম্পন্ন হওয়ার পর, মানি রিসিট এবং পাসপোর্টের কপি আমাদের কাছে পাঠাতে হবে।
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Instruction 2 -->
+                    <div class="card instruction-card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <span class="step-badge bg-primary text-white rounded-circle d-flex align-items-center justify-content-center">২</span>
+                                <h5 class="card-title mb-0 bangla">রিপোর্ট প্রদান</h5>
+                            </div>
+                            <div class="bangla-text ps-4 ps-md-5">
+                                <p class="card-text mb-0">
+                                    সাধারণত ১–৩ কর্মদিবসের মধ্যে রিপোর্ট প্রদান করা হবে। তবে বিশেষ কিছু ক্ষেত্রে ৫ দিন পর্যন্ত সময় লাগতে পারে।
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Instruction 3 -->
+                    <div class="card instruction-card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <span class="step-badge bg-primary text-white rounded-circle d-flex align-items-center justify-content-center">৩</span>
+                                <h5 class="card-title mb-0 bangla">পেমেন্ট</h5>
+                            </div>
+                            <div class="bangla-text ps-4 ps-md-5">
+                                <p class="card-text mb-0">
+                                    রিপোর্ট পাওয়ার পর, কন্টাক্ট ও স্লিপের টাকা পরিশোধ করতে হবে।
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Instruction 4 -->
+                    <div class="card instruction-card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <span class="step-badge bg-primary text-white rounded-circle d-flex align-items-center justify-content-center">৪</span>
+                                <h5 class="card-title mb-0 bangla">অনলাইন ফিট করা</h5>
+                            </div>
+                            <div class="bangla-text ps-4 ps-md-5">
+                                <p class="card-text mb-0">
+                                    কন্টাক্ট ও স্লিপের টাকা পরিশোধ করার ১–২ দিনের মধ্যে অনলাইনে ফিট করা হবে।
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Instruction 5 -->
+                    <div class="card instruction-card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <span class="step-badge bg-primary text-white rounded-circle d-flex align-items-center justify-content-center">৫</span>
+                                <h5 class="card-title mb-0 bangla">ফিট কার্ড সরবরাহ</h5>
+                            </div>
+                            <div class="bangla-text ps-4 ps-md-5">
+                                <p class="card-text mb-0">
+                                    ফিট কার্ড হাতে দেওয়ার দায়িত্ব আমাদের নয়। তবে কিছু নির্দিষ্ট মেডিকেলের ক্ষেত্রে আলোচনার ভিত্তিতে ফিট কার্ড সরবরাহ করা হতে পারে।
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Instruction 6 -->
+                    <div class="card instruction-card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <span class="step-badge bg-primary text-white rounded-circle d-flex align-items-center justify-content-center">৬</span>
+                                <h5 class="card-title mb-0 bangla">গ্যারান্টি</h5>
+                            </div>
+                            <div class="bangla-text ps-md-5">
+                                <p class="card-text mb-0">
+                                    আমাদের মাধ্যমে মেডিকেল করালে কোনভাবেই আনফিট হবেন না। ১০০% ফিট নিশ্চিত করা হয়।
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Important Note -->
+                    <div class="card important-note mt-4">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-exclamation-circle me-2 text-danger"></i>
+                                <h5 class="card-title mb-0 text-danger bangla">গুরুত্বপূর্ণ</h5>
+                            </div>
+                            <div class="bangla-text ps-4">
+                                <p class="card-text mb-0">
+                                    সমস্ত কাজ নির্ধারিত নিয়ম অনুসারে করা হবে। মিথ্যা তথ্য বা ভুল নথি জমা দিলে সেবা বাতিল হতে পারে।
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Info -->
+                    <div class="card contact-card mt-4">
+                        <div class="card-body text-center bangla">
+                            <h5 class="card-title mb-4">যোগাযোগের তথ্য</h5>
+                            <div class="row">
+                                <div class="col-12 col-md-6 mb-3 mb-md-0">
+                                    <div class="d-flex flex-column align-items-center">
+                                        <h5 class="fw-bold">আলী হোসেন</h5>
+                                        <p class="mb-0">ব্যাবস্থাপক</p>
+                                        <p>সার্টিশিউর মেডিকেল এজেন্সি</p>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="d-flex flex-column">
+                                        <div class="d-flex align-items-center justify-content-center mb-3">
+                                            <i class="fas fa-phone-alt me-2 text-primary"></i>
+                                            <span class="bangla-text">০১৭৭৩৯৮৩০৬৪</span>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <i class="fas fa-map-marker-alt me-2 text-primary"></i>
+                                            <span class="bangla-text">৩/৩-বি, পুরানা পল্টন, ঢাকা- ১০০০</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Footer -->
+    <footer class="footer bg-dark text-light m-0">
+        <div class="container text-center py-4 pb-2">    
+            <div class="fs-3">
+                <a href="https://web.facebook.com/t.alihossen.official" target="_blank"><i class="fa-brands fa-square-facebook text-light"></i></a>
+                <a href="https://api.whatsapp.com/send?phone=8801773983064" target="_blank"><i class="fa-brands fa-square-whatsapp text-light"></i></a>
+                <a href="mailto:info@certisuremedical.com" target="_blank"><i class="fa-solid fa-square-envelope text-light"></i></a>
+                <a href="https://www.instagram.com/t.alihossen.official/" target="_blank"><i class="fa-brands fa-square-instagram text-light"></i></a>
+            </div>
+            <a href="ourPolicy.html" class="link-info" target="_blank">Our Policy</a> | 
+            <a href="#" class="link-info" target="_blank">Meet with us</a><br>
+            <span style="color: rgb(201, 201, 202); font-size: 12px;">© 2025 CertiSure Medical Agency. All rights reserved.</span>
+        </div>
+        <P class="ms-5 p-3 pb-1 mb-0 " style="font-size: 13px; color: rgb(147, 159, 169);">DEVELOPED BY <a href="https://web.facebook.com/ratul724" target="_blank" class="link-info">RaTuL HasAn</a></P>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/common.js"></script>
+</body>
+</html>

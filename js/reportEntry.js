@@ -88,5 +88,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
     
-    localStorage.setItem('formDataArray', JSON.stringify(formDataArray));
+  localStorage.setItem('formDataArray', JSON.stringify(formDataArray));
 });

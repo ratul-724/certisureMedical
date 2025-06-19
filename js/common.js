@@ -24,6 +24,57 @@ document.addEventListener('DOMContentLoaded', () => {
             reportEntry.style.display = 'block'; // Show the report entry button
         }
     } 
+
+
+    
+
+  // Load agents when page loads
+  loadAgents();
+  // Also load when user navigates back (for cached pages)
+  window.addEventListener('pageshow', loadAgents);
+
+  async function loadAgents() {
+    try {
+        const response = await fetch('http://localhost/certisureMedical/backend/userList.php');
+        const users = await response.json();
+        const agentSelect = document.getElementById('agent');
+        // Clear existing options except the first one
+        while (agentSelect.options.length > 1) {
+            agentSelect.remove(1);
+        }
+        // Add all users as options
+        users.forEach(user => {
+            const option = document.createElement('option');
+            option.textContent = user.agentName;
+            agentSelect.appendChild(option);
+        });
+        
+        // If logged in user is not admin, set their name as default
+        const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+        if (loggedInUser && loggedInUser.role !== 'admin') {
+            agentSelect.disabled = true; // Non-admins can't change agent
+        }
+        
+        } catch (error) {
+            console.error('Error loading agents:', error);
+            // Fallback to manual input if API fails
+            const agentSelect = document.getElementById('agent');
+            agentSelect.innerHTML = `
+                <option value="" disabled selected>Select Agent</option>
+                <option value="manual">Enter Manually</option>
+            `;
+            agentSelect.addEventListener('change', function() {
+                if (this.value === 'manual') {
+                    const manualName = prompt('Enter Agent Name:');
+                    if (manualName) {
+                        const newOption = document.createElement('option');
+                        newOption.textContent = manualName;
+                        this.add(newOption);
+                    }
+                }
+            });
+        }
+    }
 });
 
 document.addEventListener('DOMContentLoaded', function() {

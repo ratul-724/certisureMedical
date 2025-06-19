@@ -15,7 +15,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <!-- Load your JavaScript file after all libraries -->
     <script src="js/downloadReport.js"></script>
-    <title>CertiSure Medical Agency | All reports</title>
+    <title> All reports | CertiSure Medical Agency</title>
 </head>
 <body>
     <header class="container-fluid d-flex justify-content-between align-items-center">
@@ -59,8 +59,60 @@
                 <div class="dataPageTop  m-0 w-100">
                     <div class="insideDataPageTop justify-content-between align-items-center px-3 w-100" style="display: flex !important;">
                         <h2 class="text-info-emphasis fw-semibold mt-3 " id="dataPageTopTitle">Submitted Reports :</h2>
-                        <div class=" justify-content-end mt-3" id="dataPageTopBtns">
-                            <button id="searchButton" class="btn rounded-pill btn-light mx-2" title="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        <div class="d-flex align-items-center justify-content-end mt-3" id="dataPageTopBtns">
+                            <div class="d-flex justify-content-end">
+                                <!-- Search Dropdown Button -->
+                                <div class="dropdown me-2">
+                                    <button class="btn rounded-pill btn-light dropdown-toggle" type="button" id="searchDropdownBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa-solid fa-search"></i>
+                                    </button>
+                                    
+                                    <!-- Search Dropdown Menu -->
+                                    <div class="dropdown-menu p-3" aria-labelledby="searchDropdownBtn" style="width: 500px;">
+                                        <form id="searchForm">
+                                            <div class="d-md-flex">
+                                                <div class="mb-3">
+                                                    <select class="form-select" id="medicalSearch">
+                                                        <option value="" selected disabled>Medicals</option>
+                                                        <option value="ZARA HEALTH CARE">ZARA HEALTH CARE</option>
+                                                        <option value="ISHTIYAQ MEDICAL CENTER">ISHTIYAQ MEDICAL CENTER</option>
+                                                        <option value="SARA MEDICAL CENTER">SARA MEDICAL CENTER</option>
+                                                        <option value="MODERN MEDICAL CENTER">MODERN MEDICAL CENTER</option>
+                                                        <option value="ECHOLAB MEDICAL SERVICES">ECHOLAB MEDICAL SERVICES</option>
+                                                        <option value="SAHARA MEDICAL CRNTER">SAHARA MEDICAL CRNTER</option>
+                                                        <option value="RX MEDICAL CRNTER">RX MEDICAL CRNTER</option>
+                                                        <option value="RELIANCE LAB">RELIANCE LAB</option>
+                                                        <option value="BMS MEDICAL CHECKUP CRNTER">BMS MEDICAL CHECKUP CRNTER</option>
+                                                        <option value="CRYSTAL DIAGONSTIC">CRYSTAL DIAGONSTIC</option>
+                                                        <option value="AL AROUBA MEDICAL SERVICES P. LTD">AL AROUBA MEDICAL SERVICES P. LTD</option>
+                                                    </select>
+                                                </div>
+                                                
+                                                <div class="mb-3">
+                                                    <select id="agent" name="agent" class=" px-3 border-black focusNone" required>
+                                                        <option value="" disabled selected>Agents</option>
+                                                        <!-- Options will be added dynamically -->
+                                                    </select>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <input type="text" class="form-control" id="nameSearch" placeholder="Name or passport">
+                                                </div>
+                                            </div>
+
+                                            
+                                            <div class="d-flex justify-content-between">
+                                                <button type="button" id="resetSearch" class="btn btn-outline-secondary">
+                                                    <i class="fa-solid fa-rotate-left"></i> Reset
+                                                </button>
+                                                <button type="submit" class="btn btn-primary">
+                                                    <i class="fa-solid fa-magnifying-glass"></i> Search
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
 
                             <div id="downloadContainer" >
                                 <button id="downloadIcon" class="btn rounded-pill btn-success me-2" title="Download Reports"><i class="fa-solid fa-download"></i></button>
@@ -101,8 +153,8 @@
         <P class="ms-5 p-3 pb-1 mb-0 " style="font-size: 13px; color: rgb(147, 159, 169);">DEVELOPED BY <a href="https://web.facebook.com/ratul724" target="_blank" class="link-info">RaTuL HasAn</a></P>
     </footer>
 
+    <script src="js/reportEntry.js"></script>
     <script src="js/data.js"></script>
-    <!-- <script src="js/updateReport.js"></script> -->
     <script src="js/common.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

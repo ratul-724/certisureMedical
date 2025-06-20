@@ -58,12 +58,12 @@
             <div id="data" class="ms-5 me-2 ps-4">
                 <div class="dataPageTop  m-0 w-100">
                     <div class="insideDataPageTop justify-content-between align-items-center px-3 w-100" style="display: flex !important;">
-                        <h2 class="text-info-emphasis fw-semibold mt-3 " id="dataPageTopTitle">Submitted Reports :</h2>
-                        <div class="d-flex align-items-center justify-content-end mt-3" id="dataPageTopBtns">
+                        <h2 class="text-info-emphasis fw-semibold mt-3 " id="dataPageTopTitle">All Reports :</h2>
+                        <div class="align-items-center justify-content-end mt-3" id="dataPageTopBtns" style="display: none;">
                             <div class="d-flex justify-content-end">
                                 <!-- Search Dropdown Button -->
                                 <div class="dropdown me-2">
-                                    <button class="btn rounded-pill btn-light dropdown-toggle" type="button" id="searchDropdownBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <button class="btn rounded-pill btn-light dropdown-toggle" type="button" id="searchDropdownBtn" data-bs-toggle="dropdown" aria-expanded="false" title="Search Report">
                                         <i class="fa-solid fa-search"></i>
                                     </button>
                                     
@@ -72,7 +72,7 @@
                                         <form id="searchForm">
                                             <div class="d-md-flex">
                                                 <div class="mb-3">
-                                                    <select class="form-select" id="medicalSearch">
+                                                    <select class="focusNone" id="medicalSearch" name="medicalSearch" style="width: 100px;">
                                                         <option value="" selected disabled>Medicals</option>
                                                         <option value="ZARA HEALTH CARE">ZARA HEALTH CARE</option>
                                                         <option value="ISHTIYAQ MEDICAL CENTER">ISHTIYAQ MEDICAL CENTER</option>
@@ -88,24 +88,24 @@
                                                     </select>
                                                 </div>
                                                 
-                                                <div class="mb-3">
-                                                    <select id="agent" name="agent" class=" px-3 border-black focusNone" required>
+                                                <div class="mb-3 ms-2">
+                                                    <select id="agent" name="agent" class="px-3 border-black focusNone" style="width: 100px;">
                                                         <option value="" disabled selected>Agents</option>
                                                         <!-- Options will be added dynamically -->
                                                     </select>
                                                 </div>
 
-                                                <div class="mb-3">
-                                                    <input type="text" class="form-control" id="nameSearch" placeholder="Name or passport">
+                                                <div class="mb-3 ms-2 w-100">
+                                                    <input type="text" class="form-control focusNone border-black" id="nameSearch" placeholder="Name or passport">
                                                 </div>
                                             </div>
 
                                             
                                             <div class="d-flex justify-content-between">
-                                                <button type="button" id="resetSearch" class="btn btn-outline-secondary">
+                                                <button type="button" id="resetSearch" class="btn btn-outline-secondary w-100">
                                                     <i class="fa-solid fa-rotate-left"></i> Reset
                                                 </button>
-                                                <button type="submit" class="btn btn-primary">
+                                                <button type="submit" class="btn btn-primary w-100 ms-2">
                                                     <i class="fa-solid fa-magnifying-glass"></i> Search
                                                 </button>
                                             </div>
@@ -115,7 +115,7 @@
                             </div>
 
                             <div id="downloadContainer" >
-                                <button id="downloadIcon" class="btn rounded-pill btn-success me-2" title="Download Reports"><i class="fa-solid fa-download"></i></button>
+                                <button id="downloadIcon" class="btn rounded-pill btn-secondary me-2" title="Download Reports"><i class="fa-solid fa-download"></i></button>
                                 <!-- Dropdown menu for download options -->
                                 <div id="downloadOptions" class="dropdown-menu">
                                     <button id="downloadPDF" class="dropdown-item"><i class="fa-solid fa-file-pdf"></i> As PDF</button>
@@ -123,12 +123,12 @@
                                 </div>
                             </div>
 
-                            <button id="clearPage" class="btn rounded-pill btn-danger" title="Clear Page"><i class="fa-solid fa-trash"></i> </button>
+                            <button id="clearPage" class="btn rounded-pill btn-danger" title="Full Page Clear"><i class="fa-solid fa-trash"></i> </button>
                         </div>
                     </div>
                     <hr style="border: 2px solid rgb(131, 128, 128); width: 100%;">
                 </div>
-                
+
                 <div id="dataDisplay" class="dataView">
                     <!-- here add all data  -->
                 </div>

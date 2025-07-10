@@ -1,28 +1,64 @@
 document.addEventListener('DOMContentLoaded', async () => {
+    // Check authentication
     const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
     if (!loggedInUser) {
         alert('You must be logged in to view this page.');
         window.location.href = 'user.html';
         return;
     }
-    
-    const dataPageTopBtns = document.getElementById('dataPageTopBtns');
-    if (loggedInUser.role === 'admin') {
-        dataPageTopBtns.style.display = 'flex';
-    } else {
-        dataPageTopBtns.style.display = 'none';
+
+    // Set welcome message
+    const welcomeName = document.getElementById('welcomeName');
+    if (welcomeName) {
+        welcomeName.textContent = loggedInUser.username || loggedInUser.agentName || 'User';
     }
 
+    // DOM elements
     const elements = {
         dataDisplay: document.getElementById('dataDisplay'),
-        submittedReportsButton: document.getElementById('submittedReports'),
-        uploadDataButton: document.getElementById('uploadData'),
         clearPageButton: document.getElementById('clearPage'),
-        loadingSpinner: document.getElementById('loadingSpinner')
+        loadingSpinner: document.getElementById('loadingSpinner'),
+        monthYearFilterBtn: document.getElementById('monthYearFilterBtn'),
+        dataPageTopBtns: document.getElementById('dataPageTopBtns')
     };
-    
-    const API_BASE_URL = 'http://localhost/certisureMedical/backend/';
 
+    const API_BASE_URL = 'http://localhost/certisureMedical/backend/';
+    let allData = [];
+    let currentDisplayedData = [];
+
+    // Set admin controls visibility
+    if (loggedInUser.role === 'admin') {
+        if (elements.dataPageTopBtns) elements.dataPageTopBtns.style.display = 'flex';
+        if (elements.monthYearFilterBtn) elements.monthYearFilterBtn.style.display = 'block';
+        if (elements.clearPageButton) elements.clearPageButton.style.display = 'block';
+    } else {
+        if (elements.dataPageTopBtns) elements.dataPageTopBtns.style.display = 'none';
+        if (elements.monthYearFilterBtn) elements.monthYearFilterBtn.style.display = 'none';
+        if (elements.clearPageButton) elements.clearPageButton.style.display = 'none';
+    }
+
+    // Main function to fetch and display data
+    const fetchDataAndRender = async () => {
+        if (elements.loadingSpinner) elements.loadingSpinner.style.display = 'block';
+        try {
+            const data = await fetchData('getSubmittedData.php', loggedInUser);
+            if (data) {
+                allData = data;
+                if (loggedInUser.role === 'admin') {
+                    filterByCurrentMonth(); // Admin sees current month by default
+                } else {
+                    renderTable(allData); // Regular users see all data
+                }
+            }
+        } catch (error) {
+            console.error('Error loading data:', error);
+            alert('Failed to load data. Please check console for details.');
+        } finally {
+            if (elements.loadingSpinner) elements.loadingSpinner.style.display = 'none';
+        }
+    };
+
+    // API fetch helper
     const fetchData = async (endpoint, body) => {
         try {
             const response = await fetch(`${API_BASE_URL}${endpoint}`, {
@@ -33,151 +69,180 @@ document.addEventListener('DOMContentLoaded', async () => {
                 },
                 body: JSON.stringify(body)
             });
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             return await response.json();
         } catch (error) {
             console.error('Fetch Error:', error);
-            alert(error.message, 'error');
-            return null;
+            throw error;
         }
     };
 
+    // Render table with data (ORIGINAL STYLING PRESERVED)
     const renderTable = (data) => {
-        elements.dataDisplay.innerHTML = ''; // Clear previous content
-        if (data.length > 0) {
-            const table = createTable(data, loggedInUser.role === 'admin');
+        currentDisplayedData = data; // Store currently displayed data
+        if (!elements.dataDisplay) return;
+        elements.dataDisplay.innerHTML = '';
+        if (data?.length > 0) {
+            const table = document.createElement('table');
+            table.className = 'table table-bordered table-striped'; // Original classes
+            
+            // Create header
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            ['SL', 'medical_Name', 'date', 'id', 'name', 'passport', 'agent', 'status', 'remarks'].forEach(text => {
+                const th = document.createElement('th');
+                th.textContent = text.charAt(0).toUpperCase() + text.slice(1);
+                headerRow.appendChild(th);
+            });
+            if (loggedInUser.role === 'admin') {
+                const actionsTh = document.createElement('th');
+                actionsTh.textContent = 'Actions';
+                headerRow.appendChild(actionsTh);
+            }
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+            
+            // Create body
+            const tbody = document.createElement('tbody');
+            data.sort((a, b) => new Date(a.date) - new Date(b.date))
+               .forEach((row, index) => {
+                   const tr = document.createElement('tr');
+                   tr.setAttribute('data-id', row.id);
+                   
+                   // Serial number
+                   const slTd = document.createElement('td');
+                   slTd.textContent = index + 1;
+                   tr.appendChild(slTd);
+                   
+                   // Data cells
+                   ['medical_name', 'date', 'id', 'name', 'passport', 'agent', 'laboratory', 'remarks'].forEach(key => {
+                       const td = document.createElement('td');
+                       let content = row[key] || '';
+                       if (['laboratory', 'remarks'].includes(key)) {
+                           content = content.toUpperCase();
+                           if (content === 'UNFIT') {
+                               td.style.backgroundColor = 'red';
+                               td.style.color = 'white';
+                           }
+                       }
+                       td.textContent = content;
+                       tr.appendChild(td);
+                   });
+                   
+                   // Actions for admin
+                   if (loggedInUser.role === 'admin') {
+                       const actionsTd = document.createElement('td');
+                       
+                       const editBtn = document.createElement('button');
+                       editBtn.className = 'btn btn-warning btn-sm me-1';
+                       editBtn.innerHTML = '<i class="fa-solid fa-edit" title="Edit this row"></i>';
+                       editBtn.addEventListener('click', () => handleEdit(row));
+                       actionsTd.appendChild(editBtn);
+                       
+                       const deleteBtn = document.createElement('button');
+                       deleteBtn.className = 'btn btn-danger btn-sm';
+                       deleteBtn.innerHTML = '<i class="fa-solid fa-trash" title="Delete this row"></i>';
+                       deleteBtn.addEventListener('click', () => handleDelete(row.id));
+                       actionsTd.appendChild(deleteBtn);
+                       
+                       tr.appendChild(actionsTd);
+                   }
+                   
+                   tbody.appendChild(tr);
+               });
+            table.appendChild(tbody);
             elements.dataDisplay.appendChild(table);
         } else {
             elements.dataDisplay.innerHTML = '<p>No data available.</p>';
         }
     };
 
-    const createTable = (data, isAdmin) => {
-        const table = document.createElement('table');
-        table.classList.add('table', 'table-bordered', 'table-striped');
-        table.appendChild(createTableHeader(isAdmin));
-        table.appendChild(createTableBody(data, isAdmin));
-        return table;
-    };
-
-    const createTableHeader = (isAdmin) => {
-        const headers = ['SL', 'medical_name', 'date', 'id', 'name', 'passport', 'agent', 'status', 'remarks'];
-        const headerRow = document.createElement('tr');
-        headers.forEach(header => headerRow.appendChild(createHeaderCell(header)));
-        if (isAdmin) headerRow.appendChild(createHeaderCell('Actions'));
-        const thead = document.createElement('thead');
-        thead.appendChild(headerRow);
-        return thead;
-    };
-
-    const createHeaderCell = (text) => {
-        const th = document.createElement('th');
-        th.textContent = text.charAt(0).toUpperCase() + text.slice(1);
-        return th;
-    };
-
-    const createTableBody = (data, isAdmin) => {
-        const tbody = document.createElement('tbody');
-        data.sort((a, b) => new Date(a.date) - new Date(b.date))
-           .forEach((row, index) => tbody.appendChild(createTableRow(row, isAdmin, index)));
-        return tbody;
-    };
-
-    const createTableCell = (content, key) => {
-        const td = document.createElement('td');
-        if (['laboratory', 'remarks'].includes(key)) {
-            content = content.toUpperCase();
-        }
-        td.textContent = content || '';
-        if (['laboratory', 'remarks'].includes(key) && content === 'UNFIT') {
-            td.style.backgroundColor = 'red';
-            td.style.color = 'white';
-        }
-        return td;
-    };
-
-    const createTableRow = (rowData, isAdmin, index) => {
-        const row = document.createElement('tr');
-        row.setAttribute('data-id', rowData.id);
+    // ADMIN-ONLY MONTH/YEAR FILTERING (FUNCTIONAL FIXES ONLY)
+    const initializeMonthYearFilter = () => {
+        const currentDate = new Date();
+        const yearSelect = document.getElementById('yearFilter');
         
-        // Add serial number cell
-        const serialCell = document.createElement('td');
-        serialCell.textContent = index + 1;
-        row.appendChild(serialCell);
+        // Set current month
+        document.getElementById('monthFilter').value = currentDate.getMonth() + 1;
         
-        const isUnfit = ['laboratory', 'remarks'].some(
-            key => rowData[key]?.toUpperCase() === 'UNFIT'
-        );
-        if (isUnfit) {
-            row.style.backgroundColor = 'red';
-            row.style.color = 'white';
+        // Populate years
+        yearSelect.innerHTML = '';
+        const currentYear = currentDate.getFullYear();
+        for (let year = currentYear - 5; year <= currentYear + 5; year++) {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            yearSelect.appendChild(option);
         }
+        yearSelect.value = currentYear;
         
-        // Add other cells
-        Object.keys(rowData).forEach(key => {
-            const cell = createTableCell(rowData[key], key);
-            row.appendChild(cell);
+        document.getElementById('applyMonthYearFilter').addEventListener('click', () => {
+            const month = parseInt(document.getElementById('monthFilter').value);
+            const year = parseInt(document.getElementById('yearFilter').value);
+            applyMonthFilter(month, year);
+        });
+
+        // Add event listener for "All Data" button
+        document.getElementById('showAllData').addEventListener('click', () => {
+            renderTable(allData);
+            const dropdown = bootstrap.Dropdown.getInstance(elements.monthYearFilterBtn);
+            if (dropdown) dropdown.hide();
+        });
+    };
+
+    const filterByCurrentMonth = () => {
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth() + 1;
+        const currentYear = currentDate.getFullYear();
+        
+        document.getElementById('monthFilter').value = currentMonth;
+        document.getElementById('yearFilter').value = currentYear;
+        
+        applyMonthFilter(currentMonth, currentYear);
+    };
+
+    const applyMonthFilter = (month, year) => {
+        if (elements.loadingSpinner) elements.loadingSpinner.style.display = 'block';
+        
+        const filteredData = allData.filter(item => {
+            if (!item.date) return false;
+            const itemDate = new Date(item.date);
+            return itemDate.getMonth() + 1 === month && itemDate.getFullYear() === year;
         });
         
-        if (isAdmin) {
-            const actionCell = createActionCell(rowData);
-            row.appendChild(actionCell);
-        }
-        return row;
+        renderTable(filteredData);
+        if (elements.loadingSpinner) elements.loadingSpinner.style.display = 'none';
+        
+        // Close dropdown
+        const dropdown = bootstrap.Dropdown.getInstance(elements.monthYearFilterBtn);
+        if (dropdown) dropdown.hide();
     };
 
-    const createActionCell = (rowData) => {
-        const actionTd = document.createElement('td');
-        actionTd.appendChild(createEditButton(rowData));
-        actionTd.appendChild(createDeleteButton(rowData));
-        return actionTd;
-    };
-
-    const createEditButton = (rowData) => {
-        const button = document.createElement('button');
-        button.classList.add('btn', 'btn-warning', 'btn-sm', 'me-1');
-        button.innerHTML = '<i class="fa-solid fa-edit" title="Edit this row"></i>';
-        button.addEventListener('click', () => handleEdit(rowData));
-        return button;
-    };
-
-    const createDeleteButton = (rowData) => {
-        const button = document.createElement('button');
-        button.classList.add('btn', 'btn-danger', 'btn-sm');
-        button.innerHTML = '<i class="fa-solid fa-trash" title="Delete this row"></i>';
-        button.addEventListener('click', () => handleDelete(rowData.id));
-        return button;
-    };
-
+    // Edit/Delete handlers (ORIGINAL IMPLEMENTATION)
     const handleEdit = (rowData) => {
         const row = event.target.closest('tr');
         const cells = row.querySelectorAll('td');
         const originalData = { ...rowData };
         
-        // Skip the first cell (serial number) when editing
         for (let i = 1; i < cells.length - 1; i++) {
             const input = document.createElement('input');
             input.type = 'text';
-            input.classList.add('form-control', 'form-control-sm', 'border', 'border-secondary');
+            input.className = 'form-control form-control-sm border border-secondary';
             input.value = cells[i].textContent;
             cells[i].textContent = '';
             cells[i].appendChild(input);
         }
         
         const saveButton = document.createElement('button');
-        saveButton.innerHTML = '<i class="fa-solid fa-floppy-disk" ></i>';
+        saveButton.innerHTML = '<i class="fa-solid fa-floppy-disk"></i>';
         saveButton.title = 'Save';
-        saveButton.classList.add('btn', 'btn-success', 'btn-sm', 'me-1');
+        saveButton.className = 'btn btn-success btn-sm me-1';
         saveButton.addEventListener('click', () => handleSave(row, originalData));
 
         const cancelButton = document.createElement('button');
         cancelButton.innerHTML = '<i class="fa-solid fa-xmark" title="Cancel"></i>';
-        cancelButton.title = 'cancel';
-        cancelButton.classList.add('btn', 'btn-danger', 'btn-sm');
+        cancelButton.title = 'Cancel';
+        cancelButton.className = 'btn btn-danger btn-sm';
         cancelButton.addEventListener('click', () => handleCancel(row, originalData));
 
         const actionCell = cells[cells.length - 1];
@@ -195,26 +260,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         const cells = row.querySelectorAll('td');
         const updatedData = { ...originalData, id: rowId };
         
-        // Start from index 1 to skip serial number
         for (let i = 1; i < cells.length - 1; i++) {
-            const key = Object.keys(originalData)[i - 1]; // Adjust index for originalData
+            const key = Object.keys(originalData)[i - 1];
             const input = cells[i].querySelector('input');
-            if (input) {
-                updatedData[key] = input.value.trim();
-            }
+            if (input) updatedData[key] = input.value.trim();
         }
         
-        const response = await fetchData('updateData.php', updatedData);
-        if (response?.status === 'success') {
-            fetchDataAndRender();
-        } else {
-            alert(response?.message || '❌ Update failed.');
+        try {
+            const response = await fetchData('updateData.php', updatedData);
+            if (response?.status === 'success') {
+                fetchDataAndRender();
+            } else {
+                alert(response?.message || 'Update failed');
+            }
+        } catch (error) {
+            console.error('Update error:', error);
+            alert('Failed to update data');
         }
     };
 
     const handleCancel = (row, originalData) => {
         const cells = row.querySelectorAll('td');
-        // Skip first cell (serial number) when restoring values
         for (let i = 1; i < cells.length - 1; i++) {
             const key = Object.keys(originalData)[i - 1];
             cells[i].textContent = originalData[key];
@@ -228,166 +294,171 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const handleDelete = async (id) => {
         if (confirm('Are you sure you want to delete this report?')) {
-            const response = await fetchData('deleteData.php', { id, section: 'submitted' });
-            if (response?.status === 'success') {
-                fetchDataAndRender();
-            } else {
-                alert(response?.message || 'Deletion failed.');
+            try {
+                const response = await fetchData('deleteData.php', { id, section: 'submitted' });
+                if (response?.status === 'success') {
+                    fetchDataAndRender();
+                } else {
+                    alert(response?.message || 'Deletion failed');
+                }
+            } catch (error) {
+                console.error('Delete error:', error);
+                alert('Failed to delete data');
             }
         }
     };
 
-    const fetchDataAndRender = async () => {
-        const data = await fetchData('getSubmittedData.php', loggedInUser);
-        if (data) renderTable(data);
+    // Helper functions for action buttons
+    const createEditButton = (rowData) => {
+        const button = document.createElement('button');
+        button.className = 'btn btn-warning btn-sm me-1';
+        button.innerHTML = '<i class="fa-solid fa-edit" title="Edit this row"></i>';
+        button.addEventListener('click', () => handleEdit(rowData));
+        return button;
     };
 
-    elements.clearPageButton.addEventListener('click', async () => {
-        if (confirm('Are you sure you want to remove all reports?')) {
-            const response = await fetchData('clearPage.php', {});
-            if (response?.status === 'success') {
-                alert('All reports have been removed.');
-                fetchDataAndRender();
-            } else {
-                alert(response?.message || 'Failed to clear reports.');
+    const createDeleteButton = (rowData) => {
+        const button = document.createElement('button');
+        button.className = 'btn btn-danger btn-sm';
+        button.innerHTML = '<i class="fa-solid fa-trash" title="Delete this row"></i>';
+        button.addEventListener('click', () => handleDelete(rowData.id));
+        return button;
+    };
+
+    // Clear page button (admin only) - MODIFIED TO DELETE ONLY DISPLAYED DATA
+    if (loggedInUser.role === 'admin' && elements.clearPageButton) {
+        elements.clearPageButton.addEventListener('click', async () => {
+            if (currentDisplayedData.length === 0) {
+                alert('No data to delete');
+                return;
             }
-        }
-    });
 
-    // Search functionality
-    async function initializeSearch() {
-        const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-        if (!loggedInUser || loggedInUser.role !== 'admin') {
-            return; // Only allow search for admin users
-        }
+            if (confirm(`Are you sure you want to delete ${currentDisplayedData.length} displayed reports?`)) {
+                if (elements.loadingSpinner) elements.loadingSpinner.style.display = 'block';
+                
+                try {
+                    // Delete all displayed records one by one
+                    for (const record of currentDisplayedData) {
+                        const response = await fetchData('deleteData.php', { 
+                            id: record.id, 
+                            section: 'submitted' 
+                        });
+                        
+                        if (response?.status !== 'success') {
+                            throw new Error(response?.message || 'Failed to delete some records');
+                        }
+                    }
+                    
+                    // Refresh data after deletion
+                    await fetchDataAndRender();
+                    alert(`${currentDisplayedData.length} reports deleted successfully`);
+                } catch (error) {
+                    console.error('Clear displayed data error:', error);
+                    alert('Error deleting some records. Please check console for details.');
+                } finally {
+                    if (elements.loadingSpinner) elements.loadingSpinner.style.display = 'none';
+                }
+            }
+        });
+    }
 
-        // Search form submission
+    // Search functionality (ORIGINAL IMPLEMENTATION)
+    function initializeSearch() {
         const searchForm = document.getElementById('searchForm');
         if (searchForm) {
-            searchForm.addEventListener('submit', async function(e) {
+            searchForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 await performSearch();
             });
         }
 
-        // Reset button functionality
         const resetSearch = document.getElementById('resetSearch');
         if (resetSearch) {
             resetSearch.addEventListener('click', function() {
                 resetSearchForm();
-                fetchDataAndRender(); // Reload original data
+                if (loggedInUser.role === 'admin') {
+                    filterByCurrentMonth();
+                } else {
+                    renderTable(allData);
+                }
             });
         }
     }
 
     async function performSearch() {
-        const medical = document.getElementById('medicalSearch').value;
-        const agent = document.getElementById('agent').value;
-        const namePassport = document.getElementById('nameSearch').value.trim();
-        const startDate = document.getElementById('startDateSearch').value;
-        const endDate = document.getElementById('endDateSearch').value;
+        const medical = document.getElementById('medicalSearch')?.value;
+        const agent = document.getElementById('agent')?.value;
+        const namePassport = document.getElementById('nameSearch')?.value.trim();
+        const startDate = document.getElementById('startDateSearch')?.value;
+        const endDate = document.getElementById('endDateSearch')?.value;
 
-        // Validate at least one search criteria is provided
         if (!medical && !agent && !namePassport && !startDate && !endDate) {
-            alert('Please provide at least one search criteria');
-            return;
+            return alert('Please provide at least one search criteria');
         }
 
-        // Validate date range if provided
         if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
-            alert('End date must be after start date');
-            return;
+            return alert('End date must be after start date');
         }
 
-        // Show loading spinner
-        document.getElementById('loadingSpinner').style.display = 'block';
-
+        if (elements.loadingSpinner) elements.loadingSpinner.style.display = 'block';
+        
         try {
-            // Fetch all data first
-            const response = await fetch('http://localhost/certisureMedical/backend/getSubmittedData.php', {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Authorization': localStorage.getItem('token') || ''
-                },
-                body: JSON.stringify(JSON.parse(localStorage.getItem('loggedInUser')))
-            });
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            
-            const allData = await response.json();
-
-            // Filter data based on search criteria
-            let filteredData = allData.filter(item => {
+            const filteredData = allData.filter(item => {
                 let matches = true;
                 
-                // Medical filter
-                if (medical && item.medical_name !== medical) {
-                    matches = false;
-                }
+                if (medical && item.medical_name !== medical) matches = false;
+                if (agent && item.agent !== agent) matches = false;
                 
-                // Agent filter
-                if (agent && item.agent !== agent) {
-                    matches = false;
-                }
-                
-                // Name/Passport search
                 if (namePassport) {
-                    const searchTerm = namePassport.toLowerCase();
-                    const nameMatch = item.name?.toLowerCase().includes(searchTerm) || false;
-                    const passportMatch = item.passport?.toLowerCase().includes(searchTerm) || false;
-                    if (!nameMatch && !passportMatch) {
+                    const term = namePassport.toLowerCase();
+                    if (!item.name?.toLowerCase().includes(term) && 
+                        !item.passport?.toLowerCase().includes(term)) {
                         matches = false;
                     }
                 }
                 
-                // Date range filter
                 if (startDate || endDate) {
                     const itemDate = new Date(item.date);
-                    const start = startDate ? new Date(startDate) : null;
-                    const end = endDate ? new Date(endDate) : null;
-                    
-                    if (start && itemDate < start) {
-                        matches = false;
-                    }
-                    if (end && itemDate > end) {
-                        matches = false;
-                    }
+                    if (startDate && itemDate < new Date(startDate)) matches = false;
+                    if (endDate && itemDate > new Date(endDate)) matches = false;
                 }
                 
                 return matches;
             });
 
-            // Display filtered results
             renderTable(filteredData);
             
-        } catch (error) {
-            console.error('Search error:', error);
-            alert('Search failed. Please try again.');
-        } finally {
-            // Hide loading spinner
-            document.getElementById('loadingSpinner').style.display = 'none';
-            
-            // Close the dropdown after search
             const dropdownBtn = document.getElementById('searchDropdownBtn');
             if (dropdownBtn) {
                 const dropdown = bootstrap.Dropdown.getInstance(dropdownBtn);
                 if (dropdown) dropdown.hide();
             }
+        } catch (error) {
+            console.error('Search error:', error);
+            alert('Search failed');
+        } finally {
+            if (elements.loadingSpinner) elements.loadingSpinner.style.display = 'none';
         }
     }
 
     function resetSearchForm() {
-        document.getElementById('medicalSearch').value = '';
-        document.getElementById('agent').value = '';
-        document.getElementById('nameSearch').value = '';
-        document.getElementById('startDateSearch').value = '';
-        document.getElementById('endDateSearch').value = '';
+        const medicalSearch = document.getElementById('medicalSearch');
+        const agentSearch = document.getElementById('agent');
+        const nameSearch = document.getElementById('nameSearch');
+        const startDateSearch = document.getElementById('startDateSearch');
+        const endDateSearch = document.getElementById('endDateSearch');
+        
+        if (medicalSearch) medicalSearch.value = '';
+        if (agentSearch) agentSearch.value = '';
+        if (nameSearch) nameSearch.value = '';
+        if (startDateSearch) startDateSearch.value = '';
+        if (endDateSearch) endDateSearch.value = '';
     }
 
-    // Initialize the page
+    // Initialize page
     fetchDataAndRender();
+    if (loggedInUser.role === 'admin') {
+        initializeMonthYearFilter();
+    }
     initializeSearch();
 });

@@ -61,6 +61,44 @@
                         <h2 class="text-info-emphasis fw-semibold mt-3 " id="dataPageTopTitle">All Reports :</h2>
                         <div class="align-items-center justify-content-end mt-3" id="dataPageTopBtns" style="display: none;">
                             <div class="d-flex justify-content-end">
+
+                                <!-- Month/Year Filter Button -->
+                                <div class="dropdown me-2">
+                                    <button class="btn rounded-pill btn-light dropdown-toggle" type="button" id="monthYearFilterBtn" data-bs-toggle="dropdown" aria-expanded="false" title="Filter by Month/Year">
+                                        <i class="fa-solid fa-calendar-days"></i>
+                                    </button>
+                                    <div class="dropdown-menu p-3" aria-labelledby="monthYearFilterBtn" style="width: 250px;">
+                                        <div class="d-flex justify-content-between">
+                                            <div class="mb-3 pe-2">
+                                                <label for="monthFilter" class="form-label">Month</label>
+                                                <select class="form-select" id="monthFilter">
+                                                    <option value="1">January</option>
+                                                    <option value="2">February</option>
+                                                    <option value="3">March</option>
+                                                    <option value="4">April</option>
+                                                    <option value="5">May</option>
+                                                    <option value="6">June</option>
+                                                    <option value="7">July</option>
+                                                    <option value="8">August</option>
+                                                    <option value="9">September</option>
+                                                    <option value="10">October</option>
+                                                    <option value="11">November</option>
+                                                    <option value="12">December</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="yearFilter" class="form-label">Year</label>
+                                                <select class="form-select" id="yearFilter">
+                                                    <!-- Years will be populated dynamically -->
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <!-- Add this after the Apply button in the month/year filter dropdown -->
+                                        <button type="button" id="applyMonthYearFilter" class="btn btn-primary w-100">Apply</button>
+                                        <button type="button" id="showAllData" class="btn btn-secondary w-100 mt-2">Show All Data</button>
+                                    </div>
+                                </div>
+
                                 <!-- Search Dropdown Button -->
                                 <div class="dropdown me-2">
                                     <button class="btn rounded-pill btn-light dropdown-toggle" type="button" id="searchDropdownBtn" data-bs-toggle="dropdown" aria-expanded="false" title="Search Report">
@@ -103,7 +141,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="mb-3 d-flex">
+                                            <div class="mb-3 d-flex align-items-center">
                                                 <input type="date" class="form-control focusNone border-black" id="startDateSearch" name="startDateSearch" placeholder="Start Date">
                                                 <h5 class="px-3">To</h5>
                                                 <input type="date" class="form-control focusNone border-black" id="endDateSearch" name="endDateSearch" placeholder="End Date">

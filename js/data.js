@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const dataPageTopBtns = document.getElementById('dataPageTopBtns');
     if (loggedInUser.role === 'admin') {
         dataPageTopBtns.style.display = 'flex';
-        // dataPageTopBtns.style.flexWrap = 'nowrap';
     } else {
         dataPageTopBtns.style.display = 'none';
     }
@@ -254,122 +253,141 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
     });
-    // Initialize the page
-    fetchDataAndRender();
 
-
-
-
-// Search functionality
-async function initializeSearch() {
-    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-    if (!loggedInUser || loggedInUser.role !== 'admin') {
-        return; // Only allow search for admin users
-    }
-
-    // Search form submission
-    const searchForm = document.getElementById('searchForm');
-    if (searchForm) {
-        searchForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            await performSearch();
-        });
-    }
-
-    // Reset button functionality
-    const resetSearch = document.getElementById('resetSearch');
-    if (resetSearch) {
-        resetSearch.addEventListener('click', function() {
-            resetSearchForm();
-            fetchDataAndRender(); // Reload original data
-            document.getElementById('searchResultsContainer').innerHTML = '';
-        });
-    }
-}
-
-async function performSearch() {
-    const medical = document.getElementById('medicalSearch').value;
-    const agent = document.getElementById('agent').value;
-    const namePassport = document.getElementById('nameSearch').value.trim();
-
-    // Validate at least one search criteria is provided
-    if (!medical && !agent && !namePassport) {
-        alert('Please provide at least one search criteria');
-        return;
-    }
-
-    // Show loading spinner
-    document.getElementById('loadingSpinner').style.display = 'block';
-
-    try {
-        // Fetch all data first
-        const response = await fetch('http://localhost/certisureMedical/backend/getSubmittedData.php', {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': localStorage.getItem('token') || ''
-            },
-            body: JSON.stringify(JSON.parse(localStorage.getItem('loggedInUser')))
-        });
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+    // Search functionality
+    async function initializeSearch() {
+        const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+        if (!loggedInUser || loggedInUser.role !== 'admin') {
+            return; // Only allow search for admin users
         }
-        
-        const allData = await response.json();
 
-        // Filter data based on search criteria
-        let filteredData = allData.filter(item => {
-            let matches = true;
+        // Search form submission
+        const searchForm = document.getElementById('searchForm');
+        if (searchForm) {
+            searchForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                await performSearch();
+            });
+        }
+
+        // Reset button functionality
+        const resetSearch = document.getElementById('resetSearch');
+        if (resetSearch) {
+            resetSearch.addEventListener('click', function() {
+                resetSearchForm();
+                fetchDataAndRender(); // Reload original data
+            });
+        }
+    }
+
+    async function performSearch() {
+        const medical = document.getElementById('medicalSearch').value;
+        const agent = document.getElementById('agent').value;
+        const namePassport = document.getElementById('nameSearch').value.trim();
+        const startDate = document.getElementById('startDateSearch').value;
+        const endDate = document.getElementById('endDateSearch').value;
+
+        // Validate at least one search criteria is provided
+        if (!medical && !agent && !namePassport && !startDate && !endDate) {
+            alert('Please provide at least one search criteria');
+            return;
+        }
+
+        // Validate date range if provided
+        if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
+            alert('End date must be after start date');
+            return;
+        }
+
+        // Show loading spinner
+        document.getElementById('loadingSpinner').style.display = 'block';
+
+        try {
+            // Fetch all data first
+            const response = await fetch('http://localhost/certisureMedical/backend/getSubmittedData.php', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem('token') || ''
+                },
+                body: JSON.stringify(JSON.parse(localStorage.getItem('loggedInUser')))
+            });
             
-            // Medical filter
-            if (medical && item.medical_name !== medical) {
-                matches = false;
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
             
-            // Agent filter
-            if (agent && item.agent !== agent) {
-                matches = false;
-            }
-            
-            // Name/Passport search
-            if (namePassport) {
-                const searchTerm = namePassport.toLowerCase();
-                const nameMatch = item.name?.toLowerCase().includes(searchTerm) || false;
-                const passportMatch = item.passport?.toLowerCase().includes(searchTerm) || false;
-                if (!nameMatch && !passportMatch) {
+            const allData = await response.json();
+
+            // Filter data based on search criteria
+            let filteredData = allData.filter(item => {
+                let matches = true;
+                
+                // Medical filter
+                if (medical && item.medical_name !== medical) {
                     matches = false;
                 }
-            }
-            
-            return matches;
-        });
+                
+                // Agent filter
+                if (agent && item.agent !== agent) {
+                    matches = false;
+                }
+                
+                // Name/Passport search
+                if (namePassport) {
+                    const searchTerm = namePassport.toLowerCase();
+                    const nameMatch = item.name?.toLowerCase().includes(searchTerm) || false;
+                    const passportMatch = item.passport?.toLowerCase().includes(searchTerm) || false;
+                    if (!nameMatch && !passportMatch) {
+                        matches = false;
+                    }
+                }
+                
+                // Date range filter
+                if (startDate || endDate) {
+                    const itemDate = new Date(item.date);
+                    const start = startDate ? new Date(startDate) : null;
+                    const end = endDate ? new Date(endDate) : null;
+                    
+                    if (start && itemDate < start) {
+                        matches = false;
+                    }
+                    if (end && itemDate > end) {
+                        matches = false;
+                    }
+                }
+                
+                return matches;
+            });
 
-        // Display filtered results
-        renderTable(filteredData);
-        
-    } catch (error) {
-        console.error('Search error:', error);
-        alert('Search failed. Please try again.');
-    } finally {
-        // Hide loading spinner
-        document.getElementById('loadingSpinner').style.display = 'none';
-        
-        // Close the dropdown after search
-        const dropdownBtn = document.getElementById('searchDropdownBtn');
-        if (dropdownBtn) {
-            const dropdown = bootstrap.Dropdown.getInstance(dropdownBtn);
-            if (dropdown) dropdown.hide();
+            // Display filtered results
+            renderTable(filteredData);
+            
+        } catch (error) {
+            console.error('Search error:', error);
+            alert('Search failed. Please try again.');
+        } finally {
+            // Hide loading spinner
+            document.getElementById('loadingSpinner').style.display = 'none';
+            
+            // Close the dropdown after search
+            const dropdownBtn = document.getElementById('searchDropdownBtn');
+            if (dropdownBtn) {
+                const dropdown = bootstrap.Dropdown.getInstance(dropdownBtn);
+                if (dropdown) dropdown.hide();
+            }
         }
     }
-}
 
-function resetSearchForm() {
-    document.getElementById('medicalSearch').value = '';
-    document.getElementById('agent').value = '';
-    document.getElementById('nameSearch').value = '';
-}
-// Call this at the end of your DOMContentLoaded event listener
-initializeSearch();
+    function resetSearchForm() {
+        document.getElementById('medicalSearch').value = '';
+        document.getElementById('agent').value = '';
+        document.getElementById('nameSearch').value = '';
+        document.getElementById('startDateSearch').value = '';
+        document.getElementById('endDateSearch').value = '';
+    }
 
+    // Initialize the page
+    fetchDataAndRender();
+    initializeSearch();
 });
